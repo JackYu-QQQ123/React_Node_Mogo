@@ -12,7 +12,7 @@ dotenv.config();
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
-    console.log("Connected to mongoDB!");
+    console.log("Connected to mongoDB!!!");
   } catch (error) {
     handleError(error);
   }
@@ -23,7 +23,7 @@ mongoose.connection.on("disconnected", () => {
 });
 
 mongoose.connection.on("connected", () => {
-  console.log("mongoDB connected!");
+  console.log("mongoDB connected!!!");
 });
 
 app.use(express.json());
@@ -39,6 +39,17 @@ app.get("/try", (req, res) => {
 
 app.get("/user", (req, res) => {
   res.send("hello first request");
+});
+
+app.use((err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || "We got a error @-@";
+  return res.status(errorStatus).json({
+    success: false,
+    status: errorStatus,
+    message: errorMessage,
+    stack: err.stack,
+  });
 });
 
 app.listen(8800, () => {
